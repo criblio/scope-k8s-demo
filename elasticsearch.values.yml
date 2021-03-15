@@ -1,0 +1,37 @@
+---
+replicas: 1
+minimumMasterNodes: 1
+
+# Permit co-located instances for solitary minikube virtual machines.
+antiAffinity: "soft"
+
+# Shrink default JVM heap.
+esJavaOpts: "-Xmx1024m -Xms1024m"
+
+# Allocate smaller chunks of memory per pod.
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1024M"
+  limits:
+    cpu: "1000m"
+    memory: "2048M"
+
+# Request smaller persistent volumes.
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "local-path"
+  resources:
+    requests:
+      storage: 100M
+
+service:
+  type: NodePort
+  nodePort: 30000
+
+labels:
+  app.kubernetes.io/name: elasticsearch
+
+extraEnvs:
+  - name: "SCOPE_EVENT_HTTP_HEADER"
+    value: "(?i)Cookie.*"
