@@ -22,11 +22,15 @@ data:
     [[outputs.prometheus_client]]
       listen = ":9273"
 
+    [[processors.override]]
+      [processors.override.tags]
+        metric_type = "gauge"
+
     [[inputs.statsd]]
       protocol = "tcp"
       service_address = ":8125"
       datadog_extensions = true
-      delete_counters = false
+      delete_counters = true
       
 ---
 apiVersion: apps/v1

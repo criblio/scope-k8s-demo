@@ -2,6 +2,9 @@ service:
   type: NodePort
   nodePort: 30001
 
+fullnameOverride: kibana
+elasticsearchHosts: "http://elasticsearch:9200"
+
 labels:
   app.kubernetes.io/name: kibana
 

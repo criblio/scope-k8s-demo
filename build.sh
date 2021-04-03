@@ -4,8 +4,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 docker build -t cribl/scope-k8s-demo-fluentd fluentd
 docker push cribl/scope-k8s-demo-fluentd
-docker build -t cribl/scope-kis-demo-prometheus prometheus
-docker push cribl/scope-k8dockes-demo-prometheus
+docker build -t cribl/scope-k8s-demo-prometheus prometheus
+docker push cribl/scope-k8s-demo-prometheus
 
 cd ${DIR}/telegraf
 git clone https://github.com/influxdata/telegraf.git

@@ -1,0 +1,71 @@
+# Default values for logstream-master.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+criblImage:
+  repository: cribl/cribl
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2.4.4-RC2"
+
+imagePullSecrets: []
+nameOverride: "cribl"
+fullnameOverride: "cribl"
+
+autoscaling:
+  enabled: false
+
+config:
+  scName:
+  criblHome: /opt/cribl
+  rejectSelfSignedCerts: 0
+  healthPort: 9000
+
+# env:
+#   CRIBL_BEFORE_START_CMD_1: if [ ! -d /opt/cribl/config-volume/groups ] ; then  cp -R /var/opt/cribl/* /opt/cribl/config-volume; fi
+#   CRIBL_BEFORE_START_CMD_2: ls -al /opt/cribl/config-volume/groups
+#   CRIBL_AFTER_START_CMD_1: sleep 300 && $CRIBL_HOME/config-volume/scripts/api-deploy > /tmp/deploy.log
+
+service:
+  internalType: ClusterIP
+  externalType: NodePort
+  annotations: {}
+
+  ports:
+  - name: api
+    port: 9000
+    nodePort: 30004
+    protocol: TCP
+    external: true
+  - name: appscope
+    port: 10090
+    protocol: TCP
+    external: false
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: 
+  limits:
+    cpu: 1500m
+    memory: 4096Mi
+  requests:
+    cpu: 500m
+    memory: 1024Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
