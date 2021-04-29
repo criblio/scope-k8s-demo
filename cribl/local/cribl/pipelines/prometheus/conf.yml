@@ -1,0 +1,80 @@
+output: default
+groups: {}
+asyncFuncTimeout: 1000
+functions:
+  - id: aggregation
+    filter: _metric_type
+    disabled: null
+    conf:
+      passthrough: false
+      preserveGroupBys: false
+      sufficientStatsOnly: false
+      metricsMode: false
+      timeWindow: 10s
+      aggregations:
+        - sum(_value).where(_metric_type=='counter').as(__new_value)
+        - last(_value).where(_metric_type=='gauge').as(__new_value)
+      cumulative: false
+      groupbys:
+        - "!_time"
+        - "*"
+      add:
+        - name: _metric
+          value: _metric.replace(/\./, '_')
+        - name: _value
+          value: __new_value
+    description: Aggregate Samples
+  - id: eval
+    filter: _metric
+    disabled: true
+    conf:
+      add:
+        - name: __new_metric
+          value: _metric.replace(/\./, '_')
+        - value: "{[__e['__new_metric']]: Number(_value)}"
+          name: __new_metric_value
+        - value: Object.assign(__e, __new_metric_value)
+      remove:
+        - _metric_type
+        - _metric
+        - _value
+    description: Reshape _metric to be the field name
+  - id: eval
+    filter: __criblMetrics[0].types
+    disabled: true
+    conf:
+      add:
+        - name: __criblMetrics[0].types
+          value: "['gauge']"
+        - name: __criblMetrics[0].values
+          value: "[]"
+        - name: __criblMetrics[0].values[0]
+          value: __new_metric
+      remove:
+        - starttime
+        - endtime
+        - _time
+  - id: eval
+    filter: _metric
+    disabled: null
+    conf:
+      remove:
+        - starttime
+        - endtime
+  - id: publish_metrics
+    filter: "true"
+    disabled: false
+    conf:
+      overwrite: true
+      dimensions:
+        - "!_*"
+        - "*"
+      removeMetrics: []
+      removeDimensions:
+        - starttime
+        - endtime
+      fields:
+        - metricType: gauge
+          outFieldExpr: _metric
+          inFieldName: _value
+description: Shape metrics up for Prometheus

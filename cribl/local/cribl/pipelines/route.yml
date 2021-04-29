@@ -1,0 +1,21 @@
+id: default
+groups: {}
+routes:
+  - id: 8uUeab
+    name: prometheus
+    final: true
+    disabled: false
+    pipeline: prometheus
+    description: Send Metrics to Prometheus
+    clones: []
+    filter: __criblMetrics
+    output: prometheus
+  - id: default
+    name: default
+    final: true
+    disabled: false
+    pipeline: main
+    description: ""
+    clones: []
+    filter: "true"
+    output: default

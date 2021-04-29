@@ -1,0 +1,36 @@
+outputs:
+  default:
+    defaultId: elastic
+    type: default
+  prometheus:
+    systemFields:
+      - cribl_pipe
+    authType: none
+    sendMetadata: true
+    concurrency: 5
+    maxPayloadSizeKB: 4096
+    maxPayloadEvents: 0
+    timeoutSec: 30
+    flushPeriodSec: 1
+    onBackpressure: block
+    metricsFlushPeriodSec: 60
+    type: prometheus
+    url: http://prometheus:9090/api/v1/write
+    metricRenameExpr: name.replace(/\./, '_')
+  elastic:
+    systemFields:
+      - cribl_pipe
+    concurrency: 5
+    maxPayloadSizeKB: 4096
+    maxPayloadEvents: 0
+    compress: false
+    timeoutSec: 30
+    flushPeriodSec: 1
+    auth:
+      disabled: true
+    elasticVersion: auto
+    onBackpressure: block
+    type: elastic
+    url: http://elasticsearch:9200/_bulk
+    index: cribl
+    docType: cribl
