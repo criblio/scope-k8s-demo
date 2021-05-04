@@ -15,6 +15,8 @@ brew install kubectl
 brew install helm
 ```
 
+Please also make sure you have sufficient memory for Docker, see [Resources](https://docs.docker.com/docker-for-mac/#resources) for how to increase.
+
 ### Linux
 ```bash
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
