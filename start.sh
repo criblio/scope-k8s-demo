@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+IMAGE="cribl/scope:${SCOPE_VER:-0.6.0}"
 
 whitespace() {
   echo ""
@@ -32,16 +33,21 @@ nodes:
     hostPort: 30004
     protocol: TCP
 EOF
+  if [ -n "$(docker images -q --filter=reference=$IMAGE)" ]; then
+      echo
+      echo "Sideloading $IMAGE image into cluster"
+      kind load docker-image $IMAGE --name scope-k8s-demo
+  fi
   whitespace
 }
 
 scope() {
   echo "Installing scope"
   if [[ $1 == "cribl" ]]; then
-    docker run -it --rm cribl/scope:0.6.0 \
+    docker run -it --rm $IMAGE \
       scope k8s --cribldest cribl-internal:10090 | kubectl apply -f -
   else
-    docker run -it --rm cribl/scope:0.6.0 \
+    docker run -it --rm $IMAGE \
       scope k8s --metricdest tcp://telegraf:8125 --metricformat statsd --eventdest tcp://fluentd:10001 | kubectl apply -f -
   fi
   
