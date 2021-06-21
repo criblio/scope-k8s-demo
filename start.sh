@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+IMAGE="cribl/scope:${SCOPE_VER:-0.6.0}"
 
 whitespace() {
   echo ""
@@ -29,19 +30,27 @@ nodes:
     hostPort: 30003
     protocol: TCP
   - containerPort: 30004
-    hostPort: 30004
+    hostPort: 9900
     protocol: TCP
 EOF
-  whitespace
+
+if [ -n "$(docker images -q --filter=reference=$IMAGE)" ]; then
+      echo
+      echo "Sideloading $IMAGE image into cluster"
+      kind load docker-image $IMAGE --name scope-k8s-demo
+fi
+
+whitespace
 }
 
 scope() {
   echo "Installing scope"
   if [[ $1 == "cribl" ]]; then
-    docker run -it --rm cribl/scope:0.6.0 \
-      scope k8s --cribldest cribl-internal:10090 | kubectl apply -f -
+    echo "using image $IMAGE"
+    docker run -it --rm $IMAGE  \
+           scope k8s --cribldest tcp://cribl-internal:10090 | kubectl apply -f -
   else
-    docker run -it --rm cribl/scope:0.6.0 \
+    docker run -it --rm $IMAGE \
       scope k8s --metricdest tcp://telegraf:8125 --metricformat statsd --eventdest tcp://fluentd:10001 | kubectl apply -f -
   fi
   
@@ -90,12 +99,19 @@ grafana() {
   helm install grafana grafana/grafana -f grafana.values.yml
 }
 
+client-alpine() {
+  echo "Installing client-alpine..."
+  kubectl apply -f client-alpine.k8s.yml
+  whitespace
+}
+
 allall() {
   kubernetes
   scope $1
   elasticsearch $1
   prometheus
   grafana
+  client-alpine
 }
 
 oss() {
