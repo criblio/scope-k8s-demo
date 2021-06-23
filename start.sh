@@ -30,7 +30,7 @@ nodes:
     hostPort: 30003
     protocol: TCP
   - containerPort: 30004
-    hostPort: 9900
+    hostPort: 30004
     protocol: TCP
 EOF
 
