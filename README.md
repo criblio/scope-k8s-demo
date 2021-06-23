@@ -4,7 +4,7 @@ This demo environment uses [AppScope](https://appscope.dev/) to instrument conta
 
 ## Overview
 
-The diagram below depicts the demo cluster. The Scope pod is started first and runs `scope k8s --server` to provide the webhook called when other pods are added. The other pods are then added and configured to connect inputs and outputs as shown. Run `./start.sh cribl` to start the LogStream pod or `./start.sh oss` instead to start Telefraf and Fluentd. Scoped processes will be configured to send events and metrics to whichever was used. Ports to access the web interfaces for the containers are exposed to allow access to LogStream, Prometheus, Elasticsearch, Kibana, and Grafana. 
+The diagram below depicts the demo cluster. The Scope pod is started first and runs `scope k8s --server` to provide the webhook called when other pods are added. The other pods are then added and configured to connect inputs and outputs as shown. Run `./start.sh` to start Telegraf/Fluentd or `./scope.sh cribl` to start LogStream instead. Scoped processes will be configured to send events and metrics to whichever was used. Ports to access the web interfaces for the containers are exposed to allow access to LogStream, Prometheus, Elasticsearch, Kibana, and Grafana. 
 
 ![Block Diagram](block_diagram.png)
 
@@ -65,5 +65,6 @@ To clean up the demo, simply run `stop.sh`:
 
 * The `scope k8s` command (without the `--server` option) outputs YAML suitable for piping into `kubectl apply`. This is how we create the Scope pod and configure the mutating webhook. Once that's in place we set `scope=enabled` in the default namespace and we're ready to proceed with adding other pods.
 * The webhook is called when containers are added in pods that **don't** have the `appscope.dev/disable` annotation. It creates and populates a volume that is mounted at `/scope` in the containers. It contains the extracted AppScope programs an library along with a `scope.yml` config the directs outputs to either the LogStream or Telegraf/Fluentd pods. It sets some environment variables too.
+* Local container images can be sideloaded from the local Docker registry into the cluster using `kind load docker-image $IMAGE --name scope-k8s-demo`. Handy when working with a custom image not available at Docker Hub.
 
 
