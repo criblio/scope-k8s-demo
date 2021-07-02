@@ -33,22 +33,19 @@ nodes:
     hostPort: 30004
     protocol: TCP
 EOF
-
-if [ -n "$(docker images -q --filter=reference=$IMAGE)" ]; then
+  if [ -n "$(docker images -q --filter=reference=$IMAGE)" ]; then
       echo
       echo "Sideloading $IMAGE image into cluster"
       kind load docker-image $IMAGE --name scope-k8s-demo
-fi
-
-whitespace
+  fi
+  whitespace
 }
 
 scope() {
   echo "Installing scope"
   if [[ $1 == "cribl" ]]; then
-    echo "using image $IMAGE"
-    docker run -it --rm $IMAGE  \
-           scope k8s --cribldest tcp://cribl-internal:10090 | kubectl apply -f -
+    docker run -it --rm $IMAGE \
+      scope k8s --cribldest cribl-internal:10090 | kubectl apply -f -
   else
     docker run -it --rm $IMAGE \
       scope k8s --metricdest tcp://telegraf:8125 --metricformat statsd --eventdest tcp://fluentd:10001 | kubectl apply -f -
