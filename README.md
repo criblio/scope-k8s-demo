@@ -1,6 +1,14 @@
 # AppScope Kubernetes Demo
 
-This demo environment uses [AppScope](https://appscope.dev/) to instrumental containers running in a our demo environment. AppScope provides black box instrumentation that can help you collect performance information and logs from any running Linux process, no matter the runtime. The `scope` CLI makes installing AppScope in Kubernetes as simple as a single command. AppScope installs a [mututating admission webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/) automatically scopes any new container starting up in a namespace with the label `scope=enabled`. Read more about AppScope in our docs [here](https://appscope.dev/docs/overview), and read more about the Kubernetes feature here (coming).
+This demo environment uses [AppScope](https://appscope.dev/) to instrument containers running in a demo environment. AppScope provides black box instrumentation that can help you collect performance information and logs from any running Linux process, no matter the runtime. The `scope` CLI makes installing AppScope in Kubernetes as simple as a single command. AppScope installs a [mututating admission webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/) that automatically scopes any new container starting up in a namespace with the label `scope=enabled`. Read more about AppScope in our docs [here](https://appscope.dev/docs/overview), and read more about the Kubernetes feature here (coming).
+
+## Overview
+
+The diagram below depicts the demo cluster. The Scope pod is started first and runs `scope k8s --server` to provide the webhook called when other pods are added. The other pods are then added and configured to connect inputs and outputs as shown. Run `./start.sh` to start Telegraf/Fluentd or `./scope.sh cribl` to start LogStream instead. Scoped processes will be configured to send events and metrics to whichever was used. Ports to access the web interfaces for the containers are exposed to allow access to LogStream, Prometheus, Elasticsearch, Kibana, and Grafana. 
+
+![Block Diagram](block_diagram.png)
+
+Processes run in additional pods will be scoped unless the `appscope.dev/disable` annotation is set.
 
 ## Prerequisites
 For this demo environment, you will need Docker, `bash`, and a few Kubernetes utilties: `kubectl`, `kind` and `helm`. `start.sh` uses `kind` to create a Kubernetes environment running in Docker, then we use `kubectl` and `helm` to install Elasticsearch, Kibana, Prometheus, and Grafana. By default, AppScope will send to Fluentd and Telegraf which will send to Elasticsearch and be scraped by Prometheus, or, you can send the data to Cribl LogStream instead, where we will also do some reshaping of the data in LogStream to make it easy to route it anywhere and to help control volume.
@@ -52,3 +60,11 @@ To clean up the demo, simply run `stop.sh`:
 ```bash
 ./stop.sh
 ```
+
+## How it Works
+
+* The `scope k8s` command (without the `--server` option) outputs YAML suitable for piping into `kubectl apply`. This is how we create the Scope pod and configure the mutating webhook. Once that's in place we set `scope=enabled` in the default namespace and we're ready to proceed with adding other pods.
+* The webhook is called when containers are added in pods that **don't** have the `appscope.dev/disable` annotation. It creates and populates a volume that is mounted at `/scope` in the containers. It contains the extracted AppScope programs an library along with a `scope.yml` config the directs outputs to either the LogStream or Telegraf/Fluentd pods. It sets some environment variables too.
+* Local container images can be sideloaded from the local Docker registry into the cluster using `kind load docker-image $IMAGE --name scope-k8s-demo`. Handy when working with a custom image not available at Docker Hub.
+
+

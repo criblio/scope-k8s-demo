@@ -96,12 +96,19 @@ grafana() {
   helm install grafana grafana/grafana -f grafana.values.yml
 }
 
+client-alpine() {
+  echo "Installing client-alpine..."
+  kubectl apply -f client-alpine.k8s.yml
+  whitespace
+}
+
 allall() {
   kubernetes
   scope $1
   elasticsearch $1
   prometheus
   grafana
+  client-alpine
 }
 
 oss() {
