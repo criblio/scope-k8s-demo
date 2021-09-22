@@ -1,0 +1,41 @@
+baddev:
+  type: collection
+  ttl: 4h
+  removeFields: []
+  resumeOnBoot: false
+  schedule:
+    cronSchedule: "*/1 * * * * *"
+    maxConcurrentRuns: 1
+    skippable: true
+    run:
+      rescheduleDroppedTasks: true
+      maxTaskReschedule: 1
+      mode: run
+      timeRangeType: relative
+      expression: "true"
+      logLevel: info
+      minTaskSize: 1MB
+      maxTaskSize: 10MB
+      jobTimeout: "0"
+    enabled: true
+  collector:
+    conf:
+      discovery:
+        discoverType: http
+        discoverMethod: get
+        discoverUrl: "`http://apiserver:4000/randUsers/5`"
+      collectMethod: get
+      authentication: none
+      collectUrl: "`http://apiserver:4000/users/${id}`"
+    destructive: false
+    type: rest
+  input:
+    type: collection
+    staleChannelFlushMs: 10000
+    sendToRoutes: false
+    preprocess:
+      disabled: true
+    throttleRatePerSec: "0"
+    pipeline: passthru
+    output: devnull
+

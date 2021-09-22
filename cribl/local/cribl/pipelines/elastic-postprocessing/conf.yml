@@ -1,0 +1,13 @@
+output: default
+groups: {}
+asyncFuncTimeout: 1000
+functions:
+  - id: rename
+    filter: _raw
+    disabled: null
+    conf:
+      wildcardDepth: 5
+      rename:
+        - currentName: _raw
+          newName: message
+    description: Rename _raw to message

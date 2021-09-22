@@ -1,0 +1,172 @@
+functions:
+  - id: eval
+    filter: _metric=='http.client.duration' && _metric_type=='counter'
+    disabled: null
+    conf:
+      add:
+        - name: _metric_type
+          value: "'timer'"
+        - name: http_target
+          value: __e['http.target']
+      remove:
+        - __e['http.target']
+    description: Fixing a few schema bugs in AppScope, temporary
+  - id: eval
+    filter: __inputId.startsWith('appscope')
+    disabled: null
+    conf:
+      remove:
+        - pid
+    description: Drop pid field
+  - id: aggregation
+    filter: __inputId.startsWith('appscope') && _metric_type=='counter'
+    disabled: false
+    conf:
+      passthrough: false
+      preserveGroupBys: false
+      sufficientStatsOnly: false
+      metricsMode: true
+      timeWindow: 10s
+      aggregations:
+        - sum(_value).as('_value')
+      cumulative: false
+      groupbys:
+        - "*"
+        - __inputId
+      add: []
+    description: PID dropped, aggregate across all remaining dimensions
+  - id: aggregation
+    filter: __inputId.startsWith('appscope') && _metric_type=='gauge'
+    disabled: false
+    conf:
+      passthrough: false
+      preserveGroupBys: false
+      sufficientStatsOnly: false
+      metricsMode: true
+      timeWindow: 10s
+      aggregations:
+        - sum(_value).as('_value')
+      cumulative: false
+      groupbys:
+        - "*"
+        - __inputId
+      add: []
+    description: PID dropped, aggregate across all remaining dimensions
+  - id: aggregation
+    filter: __inputId.startsWith('appscope') && _metric_type=='timer'
+    disabled: false
+    conf:
+      passthrough: false
+      preserveGroupBys: false
+      sufficientStatsOnly: false
+      metricsMode: true
+      timeWindow: 10s
+      aggregations:
+        - avg(_value).as('_values_avg')
+        - count(_value).as('_values_count')
+        - min(_value).as('_values_min')
+        - max(_value).as('_values_max')
+        - perc(95, _value).as('_values_p95')
+        - median(_value).as('_values_median')
+        - stdev(_value).as('_values_stdev')
+      cumulative: false
+      groupbys:
+        - "*"
+        - __inputId
+      add: []
+    description: PID dropped, aggregate across all remaining dimensions
+  - id: eval
+    filter: _metric_type=='timer'
+    disabled: false
+    conf:
+      add:
+        - name: vals
+          value: |-
+            (
+                [
+                    {[`${_metric}.avg`]: _values_avg},
+                    {[`${_metric}.count`]: _values_count},
+                    {[`${_metric}.min`]: _values_min},
+                    {[`${_metric}.max`]: _values_max},
+                    {[`${_metric}.median`]: _values_median},
+                    {[`${_metric}.p95`]: _values_p95},
+                    {[`${_metric}.stdev`]: _values_stdev},
+                ]
+            )
+      remove:
+        - _values_avg
+        - _values_count
+        - _values_max
+        - _values_median
+        - _values_min
+        - _values_p95
+        - _values_stdev
+  - id: unroll
+    filter: vals
+    disabled: false
+    conf:
+      srcExpr: vals
+      dstField: vals
+  - id: eval
+    filter: _metric_type=='timer'
+    disabled: false
+    conf:
+      add:
+        - name: _metric
+          value: Object.entries(vals)[0][0]
+        - name: _value
+          value: Object.entries(vals)[0][1]
+        - name: __criblMetrics[0].values
+          value: "['_value']"
+        - name: _metric_type
+          value: "'gauge'"
+      remove:
+        - vals
+  - id: eval
+    filter: "true"
+    disabled: false
+    conf:
+      remove:
+        - starttime
+        - endtime
+        - numops
+      add:
+        - name: _value
+          value: Number(_value)
+    description: Drop Aggregation Fields
+  - id: drop
+    filter: _metric && !_value
+    disabled: false
+    conf: {}
+    description: Drop anything with a metric name but no value
+  - id: publish_metrics
+    filter: _metric && _metric_type=='gauge'
+    disabled: false
+    conf:
+      overwrite: true
+      dimensions:
+        - "!_*"
+        - "*"
+      removeMetrics: []
+      removeDimensions: []
+      fields:
+        - metricType: gauge
+          outFieldExpr: _metric.replace(/\./g, '_')
+          inFieldName: _value
+    description: Overwrite Metrics Metadata due to bug
+  - id: publish_metrics
+    filter: _metric && _metric_type=='counter'
+    disabled: false
+    conf:
+      overwrite: true
+      dimensions:
+        - "!_*"
+        - "*"
+      removeMetrics: []
+      removeDimensions: []
+      fields:
+        - metricType: counter
+          outFieldExpr: _metric.replace(/\./g, '_')
+          inFieldName: _value
+    description: Overwrite Metrics Metadata due to bug
+groups: {}

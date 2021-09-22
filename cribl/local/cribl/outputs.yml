@@ -24,8 +24,10 @@ outputs:
     maxPayloadSizeKB: 4096
     maxPayloadEvents: 0
     compress: false
+    rejectUnauthorized: false
     timeoutSec: 30
     flushPeriodSec: 1
+    useRoundRobinDns: false
     auth:
       disabled: true
       authType: manual
@@ -35,3 +37,4 @@ outputs:
     url: http://elasticsearch:9200/_bulk
     index: cribl
     docType: cribl
+    pipeline: elastic-postprocessing
