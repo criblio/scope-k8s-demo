@@ -28,6 +28,7 @@ outputs:
     flushPeriodSec: 1
     auth:
       disabled: true
+      authType: manual
     elasticVersion: auto
     onBackpressure: block
     type: elastic

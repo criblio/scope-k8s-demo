@@ -16,3 +16,6 @@ make telegraf_1.17.3-1_amd64.deb
 cd ${DIR}
 docker build -t cribl/scope-k8s-demo-telegraf telegraf
 docker push cribl/scope-k8s-demo-telegraf
+
+docker build -t cribl/scope-k8s-demo-apiserver apiserver
+docker push cribl/scope-k8s-demo-apiserver

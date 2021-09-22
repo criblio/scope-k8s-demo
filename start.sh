@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-IMAGE="cribl/scope:${SCOPE_VER:-0.6.0}"
+IMAGE="cribl/scope:${SCOPE_VER:-0.7.4-rc2}"
 
 whitespace() {
   echo ""
@@ -45,7 +45,7 @@ scope() {
   echo "Installing scope"
   if [[ $1 == "cribl" ]]; then
     docker run -it --rm $IMAGE \
-      scope k8s --cribldest cribl-internal:10090 | kubectl apply -f -
+      scope k8s --cribldest tcp://cribl-internal:10090 | kubectl apply -f -
   else
     docker run -it --rm $IMAGE \
       scope k8s --metricdest tcp://telegraf:8125 --metricformat statsd --eventdest tcp://fluentd:10001 | kubectl apply -f -
@@ -102,6 +102,12 @@ client-alpine() {
   whitespace
 }
 
+apiserver() {
+  echo "Installing apiserver..."
+  kubectl apply -f apiserver.k8s.yml
+  whitespace
+}
+
 allall() {
   kubernetes
   scope $1
@@ -109,6 +115,7 @@ allall() {
   prometheus
   grafana
   client-alpine
+  apiserver
 }
 
 oss() {

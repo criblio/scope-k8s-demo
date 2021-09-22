@@ -1,13 +1,13 @@
 ---
-# Source: logstream-master/templates/secret.yaml
+# Source: logstream-leader/templates/secret.yaml
 apiVersion: v1
 kind: Secret
 type: Opaque
 metadata: 
- name: logstream-master-config-cribl
+ name: logstream-leader-config-cribl
 stringData:
 ---
-# Source: logstream-master/templates/claims.yaml
+# Source: logstream-leader/templates/claims.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -20,15 +20,15 @@ spec:
     requests:
       storage: 20Gi
 ---
-# Source: logstream-master/templates/service.yaml
+# Source: logstream-leader/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: cribl-internal
   labels:
-    helm.sh/chart: logstream-master-2.4.3
+    helm.sh/chart: logstream-leader-2.4.3
     app.kubernetes.io/name: cribl
-    app.kubernetes.io/instance: logstream-master
+    app.kubernetes.io/instance: logstream-leader
     app.kubernetes.io/version: "2.4.3"
     app.kubernetes.io/managed-by: Helm
   annotations:
@@ -49,17 +49,17 @@ spec:
         
   selector:
     app.kubernetes.io/name: cribl
-    app.kubernetes.io/instance: logstream-master
+    app.kubernetes.io/instance: logstream-leader
 ---
-# Source: logstream-master/templates/service.yaml
+# Source: logstream-leader/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: cribl
   labels:
-    helm.sh/chart: logstream-master-2.4.3
+    helm.sh/chart: logstream-leader-2.4.3
     app.kubernetes.io/name: cribl
-    app.kubernetes.io/instance: logstream-master
+    app.kubernetes.io/instance: logstream-leader
     app.kubernetes.io/version: "2.4.3"
     app.kubernetes.io/managed-by: Helm
   annotations:
@@ -79,30 +79,29 @@ spec:
       
   selector:
     app.kubernetes.io/name: cribl
-    app.kubernetes.io/instance: logstream-master
+    app.kubernetes.io/instance: logstream-leader
 ---
-# Source: logstream-master/templates/deployment.yaml
+# Source: logstream-leader/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cribl
   labels:
-    helm.sh/chart: logstream-master-2.4.3
     app.kubernetes.io/name: cribl
-    app.kubernetes.io/instance: logstream-master
-    app.kubernetes.io/version: "2.4.3"
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: logstream-leader
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: cribl
-      app.kubernetes.io/instance: logstream-master
+      app.kubernetes.io/instance: logstream-leader
   template:
     metadata:
       labels:
         app.kubernetes.io/name: cribl
-        app.kubernetes.io/instance: logstream-master
+        app.kubernetes.io/instance: logstream-leader
+      annotations:
+        appscope.dev/disable: "true"
     spec:
       initContainers:
         - name: copy-configs
@@ -120,8 +119,8 @@ spec:
             mkdir -p /opt/cribl/config-volume/local
             tar -zxf /tmp/initial-configs/cribl-initial-configs.tgz -C /opt/cribl/config-volume/local --strip=2 
       containers:
-        - name: logstream-master
-          image: "cribl/cribl:latest"
+        - name: logstream-leader
+          image: "cribl/cribl:3.1.2-TC5"
           imagePullPolicy: Always
           volumeMounts:
           - name: config-storage

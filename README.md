@@ -4,7 +4,7 @@ This demo environment uses [AppScope](https://appscope.dev/) to instrument conta
 
 ## Overview
 
-The diagram below depicts the demo cluster. The Scope pod is started first and runs `scope k8s --server` to provide the webhook called when other pods are added. The other pods are then added and configured to connect inputs and outputs as shown. Run `./start.sh` to start Telegraf/Fluentd or `./scope.sh cribl` to start LogStream instead. Scoped processes will be configured to send events and metrics to whichever was used. Ports to access the web interfaces for the containers are exposed to allow access to LogStream, Prometheus, Elasticsearch, Kibana, and Grafana. 
+The diagram below depicts the demo cluster. The Scope pod is started first and runs `scope k8s --server` to provide the webhook called when other pods are added. The other pods are then added and configured to connect inputs and outputs as shown. Run `./start.sh` to start with LogStream or `./start.sh oss` to start with Telegraf/Fluentd instead. Scoped processes will be configured to send events and metrics to whichever was used. Ports to access the web interfaces for the containers are exposed to allow access to LogStream, Prometheus, Elasticsearch, Kibana, and Grafana. 
 
 ![Block Diagram](block_diagram.png)
 
@@ -48,6 +48,7 @@ This will stand up Elasticsearch, Kibana, Grafana, Prometheus, Fluentd and Teleg
 |Grafana|[http://localhost:30003](http://localhost:30003)|
 |Kibana|[http://localhost:30001](http://localhost:30001)|
 |Prometheus|[http://localhost:30002](http://localhost:30002)|
+|LogStream|[http://localhost:30004](http://localhost:30004)|
 
 Check out the AppScope dashboards in Grafana and Kibana!
 

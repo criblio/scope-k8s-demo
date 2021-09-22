@@ -139,7 +139,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (rate(http_requests[$__rate_interval]))",
+                  "expr": "sum by (name, proc) (http_requests)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -237,7 +237,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc, http_status_code) (rate(http_requests{http_status_code!~\"2[0-9]{2}\"}[$__rate_interval]))",
+                  "expr": "sum by (name, proc, http_status_code) (http_requests{http_status_code!~\"2[0-9]{2}\"})",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}} - {{http_status_code}}",
                   "queryType": "randomWalk",
@@ -343,7 +343,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (rate(http_request_content_length[$__rate_interval]))",
+                  "expr": "sum by (name, proc) (http_request_content_length)",
                   "instant": false,
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
@@ -450,7 +450,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (rate(http_response_content_length[$__rate_interval]))",
+                  "expr": "sum by (name, proc) (http_response_content_length)",
                   "instant": false,
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
@@ -571,7 +571,7 @@ dashboards:
               "pluginVersion": "7.4.2",
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (rate(net_tx[$__rate_interval]))",
+                  "expr": "sum by (name, proc) (net_tx)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -653,7 +653,7 @@ dashboards:
               "pluginVersion": "7.4.2",
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (rate(net_rx[$__rate_interval]))",
+                  "expr": "sum by (name, proc) (net_rx)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -915,7 +915,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (rate(fs_open[$__rate_interval])) by (name, proc)",
+                  "expr": "sum (fs_open) by (name, proc)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -1013,7 +1013,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (rate(fs_close[$__rate_interval])) by (name, proc)",
+                  "expr": "sum (fs_close) by (name, proc)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -1111,7 +1111,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (rate(fs_read[$__rate_interval])) by (name, proc)",
+                  "expr": "sum (fs_read) by (name, proc)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -1209,7 +1209,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (rate(fs_write[$__rate_interval])) by (name, proc)",
+                  "expr": "sum (fs_write) by (name, proc)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",

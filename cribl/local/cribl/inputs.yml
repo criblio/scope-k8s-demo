@@ -8,6 +8,8 @@ inputs:
     maxActiveCxn: 1000
     enableProxyHeader: false
     staleChannelFlushMs: 10000
+    authType: manual
     authToken: ""
     type: appscope
     port: 10090
+    pipeline: appscope
