@@ -65,9 +65,9 @@ elasticsearch() {
   helm repo add elastic https://helm.elastic.co
   helm install elasticsearch elastic/elasticsearch --values ${DIR}/elasticsearch.values.yml
   if [[ $1 == "cribl" ]]; then
-    cd ${DIR}/cribl && kubectl create secret generic kibana-config --from-file=kibana.config.ndjson && cd -
+    cd ${DIR}/cribl && kubectl create secret generic kibana-config --from-file=./ && cd -
   else
-    cd ${DIR}/fluentd && kubectl create secret generic kibana-config --from-file=kibana.config.ndjson && cd -
+    cd ${DIR}/fluentd && kubectl create secret generic kibana-config --from-file=./ && cd -
   fi
   helm install kibana elastic/kibana --values ${DIR}/kibana.values.yml
 }

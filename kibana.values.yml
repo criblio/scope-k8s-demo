@@ -21,4 +21,6 @@ lifecycle:
         - |
           #!/bin/bash
           while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5601/app/kibana)" != "200" ]]; do sleep 1; done
-          curl -XPOST 'http://localhost:5601/api/saved_objects/_import' -H "kbn-xsrf: true" --form file=@/tmp/kibana-config/kibana.config.ndjson
+          for file in /tmp/kibana-config/*.ndjson; do
+            curl -XPOST 'http://localhost:5601/api/saved_objects/_import' -H "kbn-xsrf: true" --form file=@$file >> /tmp/kibana_config.log
+          done
