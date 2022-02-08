@@ -139,7 +139,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (http_requests)",
+                  "expr": "sum by (name, proc) (http.requests)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -237,7 +237,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc, http_status_code) (http_requests{http_status_code!~\"2[0-9]{2}\"})",
+                  "expr": "sum by (name, proc, http_status_code) (http.requests{http_status_code!~\"2[0-9]{2}\"})",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}} - {{http_status_code}}",
                   "queryType": "randomWalk",
@@ -343,7 +343,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (http_request_content_length)",
+                  "expr": "sum by (name, proc) (http.request_content_length)",
                   "instant": false,
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
@@ -450,7 +450,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum by (name, proc) (http_response_content_length)",
+                  "expr": "sum by (name, proc) (http.response_content_length)",
                   "instant": false,
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
@@ -915,7 +915,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (fs_open) by (name, proc)",
+                  "expr": "sum (fs.open) by (name, proc)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
@@ -1013,7 +1013,7 @@ dashboards:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum (fs_close) by (name, proc)",
+                  "expr": "sum (fs.close) by (name, proc)",
                   "interval": "",
                   "legendFormat": "{{name}} - {{proc}}",
                   "queryType": "randomWalk",
