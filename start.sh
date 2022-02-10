@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-IMAGE="cribl/scope:${SCOPE_VER:-1.0.0-tc3}"
+IMAGE="cribl/scope:${SCOPE_VER:-1.0.0-rc0}"
 
 whitespace() {
   echo ""
