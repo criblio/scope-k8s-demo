@@ -1,6 +1,6 @@
 functions:
   - id: eval
-    filter: _metric=='http.client.duration' && _metric_type=='counter'
+    filter: _metric=='http.duration.client' && _metric_type=='counter'
     disabled: null
     conf:
       add:
