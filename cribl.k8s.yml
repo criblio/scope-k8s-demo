@@ -120,7 +120,7 @@ spec:
             tar -zxf /tmp/initial-configs/cribl-initial-configs.tgz -C /opt/cribl/config-volume/local --strip=2 
       containers:
         - name: logstream-leader
-          image: "cribl/cribl:3.1.2-TC5"
+          image: "cribl/cribl:4.1.1"
           imagePullPolicy: Always
           volumeMounts:
           - name: config-storage
