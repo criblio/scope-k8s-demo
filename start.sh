@@ -63,13 +63,13 @@ elasticsearch() {
   echo "Installing Elasticsearch & Kibana..."
   kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
   helm repo add elastic https://helm.elastic.co
-  helm install elasticsearch elastic/elasticsearch --values ${DIR}/elasticsearch.values.yml
+  helm install elasticsearch elastic/elasticsearch --version 7.17.3 --values ${DIR}/elasticsearch.values.yml
   if [[ $1 == "cribl" ]]; then
     cd ${DIR}/cribl && kubectl create secret generic kibana-config --from-file=./ && cd -
   else
     cd ${DIR}/fluentd && kubectl create secret generic kibana-config --from-file=./ && cd -
   fi
-  helm install kibana elastic/kibana --values ${DIR}/kibana.values.yml
+  helm install kibana elastic/kibana --version 7.17.3 --values ${DIR}/kibana.values.yml
 }
 
 fluentd() {
