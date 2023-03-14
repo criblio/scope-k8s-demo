@@ -75,7 +75,12 @@ spec:
         name: api
         
         nodePort: 30004
-        
+
+      - port: 30005
+        targetPort: 30005
+        protocol: TCP
+        name: host-tcp
+        nodePort: 30005
       
   selector:
     app.kubernetes.io/name: cribl
