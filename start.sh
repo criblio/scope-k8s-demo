@@ -123,6 +123,13 @@ apiserver() {
   whitespace
 }
 
+scope-daemon() {
+  echo "Starting scope daemon..."
+  docker run --name scope_daemon --network=host --pid=host --privileged -it -d --rm -v /sys/kernel/debug:/sys/kernel/debug:ro $IMAGE \
+      scope daemon --filedest localhost:30005
+  whitespace
+}
+
 allall() {
   kubernetes
   scope $1
@@ -133,6 +140,7 @@ allall() {
   apiserver
   redis-server
   redis-client
+  scope-daemon
 }
 
 oss() {
