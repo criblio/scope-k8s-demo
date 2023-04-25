@@ -17,5 +17,5 @@ spec:
       containers:
       - name: client-alpine
         image: alpine:latest
-        command: [/scope/ldscope]
-        args: ["/usr/bin/tail", "-F", "/scope/ldscope.log"]
+        command: [/scope/scope]
+        args: ["-z", "/usr/bin/tail", "-F", "/scope/0/libscope.log"]

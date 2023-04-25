@@ -5,6 +5,7 @@ adminPassword: scopedemo
 env:
   SCOPE_EVENT_HTTP_HEADER: "(?i)Cookie.*"
   SCOPE_GO_HTTP1: false
+  SCOPE_HOME: "/home/grafana/"
 
 image:
   repository: grafana/grafana

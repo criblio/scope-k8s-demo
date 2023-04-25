@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
 USER nobody
 EXPOSE 9090
 WORKDIR /prometheus
-ENTRYPOINT [ "/scope/ldscope", "/opt/prom/prometheus" ]
+ENTRYPOINT [ "/scope/scope", "-z", "/opt/prom/prometheus" ]
 CMD ["--config.file=/etc/prometheus/prometheus.yml", \
     "--storage.tsdb.path=/prometheus", \
     "--web.console.libraries=/opt/prom/console_libraries", \
