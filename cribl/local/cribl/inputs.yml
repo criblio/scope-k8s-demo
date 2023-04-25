@@ -13,3 +13,22 @@ inputs:
     type: appscope
     port: 10090
     pipeline: appscope
+  in_scope_daemon:
+    disabled: false
+    host: 0.0.0.0
+    tls:
+      disabled: true
+    ipWhitelistRegex: /.*/
+    maxActiveCxn: 1000
+    enableProxyHeader: false
+    staleChannelFlushMs: 10000
+    enableHeader: false
+    preprocess:
+      disabled: true
+    type: tcp
+    port: 30005
+    authType: manual
+    sendToRoutes: false
+    connections:
+      - output: elastic
+        pipeline: appscopedaemon

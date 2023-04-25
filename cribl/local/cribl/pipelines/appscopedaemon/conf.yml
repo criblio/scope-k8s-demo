@@ -1,0 +1,49 @@
+output: default
+streamtags: []
+groups: {}
+asyncFuncTimeout: 1000
+functions:
+  - id: serde
+    filter: "true"
+    disabled: false
+    conf:
+      mode: extract
+      type: json
+      srcField: _raw
+    description: Parse raw JSON object
+  - id: rename
+    filter: "true"
+    disabled: false
+    conf:
+      wildcardDepth: 5
+      baseFields: []
+      renameExpr: "name.startsWith('info') ? name.replace(/_\\d+/g, \"\") : name"
+      rename: []
+    description: Rename info field
+  - id: rename
+    filter: "true"
+    disabled: false
+    conf:
+      wildcardDepth: 5
+      baseFields: []
+      renameExpr: "name.startsWith('snapshot') ? name.replace(/_\\d+/g, \"\") : name"
+      rename: []
+    description: Rename snapshot field
+  - id: rename
+    filter: "true"
+    disabled: false
+    conf:
+      wildcardDepth: 5
+      baseFields: []
+      renameExpr: "name.startsWith('backtrace') ? name.replace(/_\\d+/g, \"\") : name"
+      rename: []
+    description: Rename backtrace field
+  - id: rename
+    filter: "true"
+    disabled: false
+    conf:
+      wildcardDepth: 5
+      baseFields: []
+      renameExpr: "name.startsWith('cfg') ? name.replace(/_\\d+/g, \"\") : name"
+      rename: []
+    description: Rename cfg field

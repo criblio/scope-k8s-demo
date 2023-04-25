@@ -32,6 +32,9 @@ nodes:
   - containerPort: 30004
     hostPort: 30004
     protocol: TCP
+  - containerPort: 30005
+    hostPort: 30005
+    protocol: TCP
 EOF
   if [ -n "$(docker images -q --filter=reference=$IMAGE)" ]; then
       echo
@@ -102,9 +105,28 @@ client-alpine() {
   whitespace
 }
 
+redis-server() {
+  echo "Installing redis-server..."
+  kubectl apply -f redis-server.k8s.yml
+  whitespace
+}
+
+redis-client() {
+  echo "Installing redis-client..."
+  kubectl apply -f redis-client.k8s.yml
+  whitespace
+}
+
 apiserver() {
   echo "Installing apiserver..."
   kubectl apply -f apiserver.k8s.yml
+  whitespace
+}
+
+scope-daemon() {
+  echo "Starting scope daemon..."
+  docker run --name scope_daemon --network=host --pid=host --privileged -it -d --rm -v /sys/kernel/debug:/sys/kernel/debug:ro $IMAGE \
+      scope daemon --filedest localhost:30005
   whitespace
 }
 
@@ -116,6 +138,9 @@ allall() {
   grafana
   client-alpine
   apiserver
+  redis-server
+  redis-client
+  scope-daemon
 }
 
 oss() {
